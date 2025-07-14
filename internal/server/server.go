@@ -13,7 +13,7 @@ type Server struct {
 	Server *http.Server
 }
 
-func createRouter(log *log.Logger) *http.ServeMux {
+func createRouter() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/", handlers.IndexHtml)
 	router.HandleFunc("/upload", handlers.Upload)
@@ -21,7 +21,7 @@ func createRouter(log *log.Logger) *http.ServeMux {
 }
 
 func NewServer(logger *log.Logger) *Server {
-	router := createRouter(logger)
+	router := createRouter()
 
 	httpServer := &http.Server{
 		Addr: 	     "localhost:8080",
