@@ -14,6 +14,6 @@ func main() {
 	if err := srv.Server.ListenAndServe(); err != nil {
 		logger.Println("error when starting the service")
 	}
-	logger.Println("Starting server")
+	logger.Println("Starting the server")
 }
 
