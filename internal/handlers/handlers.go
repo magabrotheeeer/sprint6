@@ -17,7 +17,7 @@ func IndexHtml(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 }
@@ -69,7 +69,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(res))
 }
