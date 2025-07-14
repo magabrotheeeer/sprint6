@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/magabrotheeeer/sprint6/internal/server"
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/server"
 )
 
 func main() {
