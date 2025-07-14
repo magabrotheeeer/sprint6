@@ -32,8 +32,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// создаем файл
-	
 	// ограничиваем доступ к файловой системе
 	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6")
 	if err != nil {
