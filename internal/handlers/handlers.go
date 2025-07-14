@@ -14,6 +14,7 @@ func IndexHtml(w http.ResponseWriter, r *http.Request) {
 	filename := filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", "index.html")
 	data, err := os.ReadFile(filename)
 	if err != nil {
+		w.Header().Set("Content-Type", "text/html")
 		http.Error(w, "error when trying to open index.html", http.StatusInternalServerError)
 		return
 	}
@@ -62,7 +63,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(res))
 }
