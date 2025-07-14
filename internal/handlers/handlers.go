@@ -11,7 +11,7 @@ import (
 	"github.com/magabrotheeeer/sprint6/internal/service"
 )
 
-func FirstHandler(w http.ResponseWriter, r *http.Request) {
+func IndexHtml(w http.ResponseWriter, r *http.Request) {
 	projectPath, err := os.Getwd()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -29,7 +29,8 @@ func FirstHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-func UploadHandler(w http.ResponseWriter, r *http.Request) {
+func Upload(w http.ResponseWriter, r *http.Request) {
+	// скачиваем файл
 	r.ParseMultipartForm(10 << 20) // 10MB
 	file, _, err := r.FormFile("myFile")
 	if err != nil {
@@ -38,35 +39,43 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	err = os.Mkdir("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads", 0755)
+	// создаем файл
+	err = os.Mkdir("uploads", 0755)
 	if err != nil && !errors.Is(err, os.ErrExist) {
 		http.Error(w, "error when creating the folder", http.StatusInternalServerError)
 		return
 	} 
-
-	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads")
+	
+	// ограничиваем доступ к файловой системе
+	root, err := os.OpenRoot("uploads")
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-
 	defer root.Close()
-	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads", time.Now().UTC().String()))
+
+	// создаем локальный файл
+	buffer, err := os.Create(filepath.Join("uploads", time.Now().UTC().String()))
 	if err != nil {
 		http.Error(w, "error when creating the file", http.StatusInternalServerError)
 	}
 	defer buffer.Close()
 
+	// копируем скачанный файл в локальный файл
 	_, err = io.Copy(buffer, file)
 	if err != nil {
 		http.Error(w, "error when copying the file", http.StatusInternalServerError)
 		return
 	}
+
+	// считываем данные из локального файла
 	data, err := os.ReadFile(buffer.Name())
 	if err != nil {
 		http.Error(w, "error when reading the file", http.StatusInternalServerError)
 		return
 	}
+
+	// преобразуем полученные данные
 	res, err := service.DefineText(string(data))
 	if err != nil {
 		http.Error(w, "error when handling the data", http.StatusInternalServerError)
