@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -34,14 +33,9 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	// создаем файл
-	err = os.Mkdir("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads", 0755)
-	if err != nil && !errors.Is(err, os.ErrExist) {
-		http.Error(w, "error when creating the folder", http.StatusInternalServerError)
-		return
-	} 
 	
 	// ограничиваем доступ к файловой системе
-	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads")
+	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6")
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
@@ -49,7 +43,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer root.Close()
 
 	// создаем локальный файл
-	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads\\", handler.Filename))
+	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", handler.Filename))
 	if err != nil {
 		http.Error(w, "error when creating the file", http.StatusInternalServerError)
 		return
