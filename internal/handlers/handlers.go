@@ -11,8 +11,7 @@ import (
 
 func IndexHtml(w http.ResponseWriter, r *http.Request) {
 
-	filename := filepath.Join("index.html")
-	data, err := os.ReadFile(filename)
+	data, err := os.ReadFile("index.html")
 	if err != nil {
 		http.Error(w, "error when trying to open index.html", http.StatusInternalServerError)
 		return
