@@ -11,14 +11,13 @@ import (
 
 func IndexHtml(w http.ResponseWriter, r *http.Request) {
 
-	filename := filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", "index.html")
+	filename := filepath.Join("index.html")
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		w.Header().Set("Content-Type", "text/html")
 		http.Error(w, "error when trying to open index.html", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 }
@@ -35,7 +34,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 
 	// создаем локальный файл
-	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", handler.Filename))
+	buffer, err := os.Create(filepath.Join(handler.Filename))
 	if err != nil {
 		http.Error(w, "error when creating the file", http.StatusInternalServerError)
 		return
@@ -63,7 +62,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(res))
 }
