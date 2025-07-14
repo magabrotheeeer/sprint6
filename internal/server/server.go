@@ -13,14 +13,14 @@ type Server struct {
 	server *http.Server
 }
 
-func createRouter(log *log.Logger) *http.ServeMux{
+func createRouter(log *log.Logger) *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/", handlers.IndexHtml)
 	router.HandleFunc("upload", handlers.Upload)
 	return router
 }
 
-func NewServer(logger *log.Logger) *Server {
+func NewServer(logger *log.Logger) (*Server, error) {
 	router := createRouter(logger)
 
 	httpServer := &http.Server{
@@ -32,8 +32,10 @@ func NewServer(logger *log.Logger) *Server {
 		IdleTimeout:  time.Second * 15,
 	}
 
+	err := http.ListenAndServe(httpServer.Addr, router)
+
 	return &Server{
 		log:    logger,
 		server: httpServer,
-	}
+	}, err
 }
