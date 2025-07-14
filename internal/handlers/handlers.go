@@ -32,13 +32,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// ограничиваем доступ к файловой системе
-	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6")
-	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
-		return
-	}
-	defer root.Close()
 
 	// создаем локальный файл
 	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", handler.Filename))
