@@ -9,10 +9,10 @@ import (
 
 func main() {
 	logger := log.New(os.Stdout, "SERVER: ", log.LstdFlags)
-	_, err := server.NewServer(logger)
+	srv := server.NewServer(logger)
 
-	if err != nil {
-		logger.Fatalf("Error when starting server")
+	if err := srv.Server.ListenAndServe(); err != nil {
+		logger.Println("error when starting the service")
 	}
 	logger.Println("Starting server")
 }
