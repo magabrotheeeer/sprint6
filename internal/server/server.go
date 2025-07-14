@@ -5,22 +5,22 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/magabrotheeeer/sprint6/internal/handlers"
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/handlers"
 )
 
 type Server struct {
-	log    *log.Logger
-	server *http.Server
+	Log    *log.Logger
+	Server *http.Server
 }
 
 func createRouter(log *log.Logger) *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/", handlers.IndexHtml)
-	router.HandleFunc("upload", handlers.Upload)
+	router.HandleFunc("/upload", handlers.Upload)
 	return router
 }
 
-func NewServer(logger *log.Logger) (*Server, error) {
+func NewServer(logger *log.Logger) *Server {
 	router := createRouter(logger)
 
 	httpServer := &http.Server{
@@ -32,10 +32,9 @@ func NewServer(logger *log.Logger) (*Server, error) {
 		IdleTimeout:  time.Second * 15,
 	}
 
-	err := http.ListenAndServe(httpServer.Addr, router)
 
 	return &Server{
-		log:    logger,
-		server: httpServer,
-	}, err
+		Log:    logger,
+		Server: httpServer,
+	}
 }

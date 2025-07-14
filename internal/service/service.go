@@ -2,7 +2,7 @@ package service
 
 import (
 	"strings"
-	"github.com/magabrotheeeer/sprint6/pkg/morse"
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/pkg/morse"
 	"errors"
 )
 

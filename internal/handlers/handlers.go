@@ -6,19 +6,13 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 	
-	"github.com/magabrotheeeer/sprint6/internal/service"
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
 func IndexHtml(w http.ResponseWriter, r *http.Request) {
-	projectPath, err := os.Getwd()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
-	filename := filepath.Join(projectPath, "index.html")
+	filename := filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\", "index.html")
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -32,7 +26,7 @@ func IndexHtml(w http.ResponseWriter, r *http.Request) {
 func Upload(w http.ResponseWriter, r *http.Request) {
 	// скачиваем файл
 	r.ParseMultipartForm(10 << 20) // 10MB
-	file, _, err := r.FormFile("myFile")
+	file, handler, err := r.FormFile("myFile")
 	if err != nil {
 		http.Error(w, "error when receiving the file", http.StatusInternalServerError)
 		return
@@ -40,14 +34,14 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	// создаем файл
-	err = os.Mkdir("uploads", 0755)
+	err = os.Mkdir("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads", 0755)
 	if err != nil && !errors.Is(err, os.ErrExist) {
 		http.Error(w, "error when creating the folder", http.StatusInternalServerError)
 		return
 	} 
 	
 	// ограничиваем доступ к файловой системе
-	root, err := os.OpenRoot("uploads")
+	root, err := os.OpenRoot("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads")
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
@@ -55,9 +49,10 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer root.Close()
 
 	// создаем локальный файл
-	buffer, err := os.Create(filepath.Join("uploads", time.Now().UTC().String()))
+	buffer, err := os.Create(filepath.Join("C:\\Users\\akhilgovmb\\Desktop\\sprint6\\uploads\\", handler.Filename))
 	if err != nil {
 		http.Error(w, "error when creating the file", http.StatusInternalServerError)
+		return
 	}
 	defer buffer.Close()
 
