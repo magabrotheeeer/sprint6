@@ -4,12 +4,16 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
-	
+
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
 func IndexHtml(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		http.Error(w, "error: incorrect method", http.StatusInternalServerError)
+		return
+	}
 
 	data, err := os.ReadFile("index.html")
 	if err != nil {
@@ -18,13 +22,22 @@ func IndexHtml(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(data)
+	_, err = w.Write(data)
+	if err != nil {
+		http.Error(w, "error when trying to response", http.StatusInternalServerError)
+		return
+	} 
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {
 	// скачиваем файл
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		http.Error(w, "error: incorrect method", http.StatusInternalServerError)
+		return
+	}
 	r.ParseMultipartForm(10 << 20) // 10MB
-	file, handler, err := r.FormFile("myFile")
+	file, _, err := r.FormFile("myFile")
 	if err != nil {
 		http.Error(w, "error when receiving the file", http.StatusInternalServerError)
 		return
@@ -32,23 +45,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 
-	// создаем локальный файл
-	buffer, err := os.Create(filepath.Join(handler.Filename))
-	if err != nil {
-		http.Error(w, "error when creating the file", http.StatusInternalServerError)
-		return
-	}
-	defer buffer.Close()
-
-	// копируем скачанный файл в локальный файл
-	_, err = io.Copy(buffer, file)
-	if err != nil {
-		http.Error(w, "error when copying the file", http.StatusInternalServerError)
-		return
-	}
-
 	// считываем данные из локального файла
-	data, err := os.ReadFile(buffer.Name())
+	data, err := io.ReadAll(file)
 	if err != nil {
 		http.Error(w, "error when reading the file", http.StatusInternalServerError)
 		return
@@ -63,5 +61,9 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(res))
+	_, err = w.Write([]byte(res))
+	if err != nil {
+		http.Error(w, "error when trying to response", http.StatusInternalServerError)
+		return
+	} 
 }
